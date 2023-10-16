@@ -1,4 +1,5 @@
 import copy
+import math
 from dataclasses import dataclass, field
 from decimal import Decimal
 from enum import Enum
@@ -268,22 +269,12 @@ class TimingPoint:
     effects: Effects
     """Bit flags that give the timing point extra effects. See the effects section."""
 
-
-@dataclass
-class InheritedTimingPoint(TimingPoint):
-    svMultiplier: Decimal
-    """A negative inverse slider velocity multiplier, as a percentage.
-    For example, -50 would make all sliders in this timing section twice as fast as SliderMultiplier."""
-
-    uninherited = False
-
-
-@dataclass
-class UninheritedTimingPoint(TimingPoint):
-    beatDuration: Decimal
+    beatDuration: Decimal = Decimal()
     """The duration of a beat, in milliseconds."""
 
-    uninherited = True
+    svMultiplier: Decimal = Decimal(1)
+    """A negative inverse slider velocity multiplier, as a percentage.
+    For example, -50 would make all sliders in this timing section twice as fast as SliderMultiplier."""
 
 
 @dataclass
@@ -436,6 +427,10 @@ class Slider(HitObject):
 
     endTime: int = 0  # to be populated after
 
+    duration: Decimal = 0  # to be populated after
+
+    timing_point: TimingPoint = None  # to be populated after
+
 
 @dataclass
 class Spinner(HitObject):
@@ -478,6 +473,49 @@ class Section(Enum):
     TIMING_POINTS = 5,
     COLORS = 6,
     HIT_OBJECTS = 7,
+
+
+"""
+Sets beat length of inherited timing points
+"""
+def populate_timing_point_properties(beatmap: Beatmap):
+    timing_points = iter(sorted(beatmap.timingPoints, key=lambda x: x.time))
+    last_beat_duration = 0
+
+    for timing_point in timing_points:
+        if timing_point.uninherited:
+            last_beat_duration = timing_point.beatDuration
+        else:
+            timing_point.beatDuration = last_beat_duration
+
+    
+def populate_slider_properties(beatmap: Beatmap):
+    timing_points = sorted(beatmap.timingPoints, key=lambda x: x.time)
+    i = 0
+
+    timing_point = timing_points[i]
+    next_time = timing_points[i + 1].time
+
+    hit_objects = sorted(beatmap.hit_objects, key=lambda x: x.time)
+    for hit_object in hit_objects:
+        if hit_object.type == HitObjectType.SLIDER:
+            hit_object: Slider
+
+            while hit_object.time >= next_time:
+                i += 1
+
+                timing_point = timing_points[i]
+                if i + 1 < len(timing_points):
+                    next_time = timing_points[i + 1].time
+                else:
+                    next_time = math.inf
+
+            duration = timing_point.beatDuration * hit_object.slides * hit_object.length / \
+                (timing_point.svMultiplier * 100 * beatmap.difficulty.SliderMultiplier)
+
+            hit_object.endTime = hit_object.time + duration
+            hit_object.duration = duration
+            hit_object.timing_point = timing_point
 
 
 def load(filename: str):
@@ -626,11 +664,11 @@ def load(filename: str):
             effects = create_effects(int(effects))
 
             if uninherited:
-                timing_point = UninheritedTimingPoint(
+                timing_point = TimingPoint(
                     time, meter, sample_set, sample_index, volume, uninherited, effects, beat_length)
             else:
-                timing_point = InheritedTimingPoint(
-                    time, meter, sample_set, sample_index, volume, uninherited, effects, -100 / beat_length)
+                timing_point = TimingPoint(
+                    time, meter, sample_set, sample_index, volume, uninherited, effects, Decimal(), -100 / beat_length)
 
             beatmap.timingPoints.append(timing_point)
         elif section == Section.COLORS:
@@ -723,5 +761,8 @@ def load(filename: str):
                     end_time))
             elif object_type_flag == HitObjectType.HOLD_NOTE.value:
                 pass
+    
+    populate_timing_point_properties(beatmap)
+    populate_slider_properties(beatmap)
 
     return beatmap
