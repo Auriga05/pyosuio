@@ -475,10 +475,8 @@ class Section(Enum):
     HIT_OBJECTS = 7,
 
 
-"""
-Sets beat length of inherited timing points
-"""
 def populate_timing_point_properties(beatmap: Beatmap):
+    """Sets beat length of inherited timing points"""
     timing_points = iter(sorted(beatmap.timingPoints, key=lambda x: x.time))
     last_beat_duration = 0
 
@@ -488,7 +486,7 @@ def populate_timing_point_properties(beatmap: Beatmap):
         else:
             timing_point.beatDuration = last_beat_duration
 
-    
+
 def populate_slider_properties(beatmap: Beatmap):
     timing_points = sorted(beatmap.timingPoints, key=lambda x: x.time)
     i = 0
@@ -511,7 +509,7 @@ def populate_slider_properties(beatmap: Beatmap):
                     next_time = math.inf
 
             duration = timing_point.beatDuration * hit_object.slides * hit_object.length / \
-                (timing_point.svMultiplier * 100 * beatmap.difficulty.SliderMultiplier)
+                       (timing_point.svMultiplier * 100 * beatmap.difficulty.SliderMultiplier)
 
             hit_object.endTime = hit_object.time + duration
             hit_object.duration = duration
@@ -714,6 +712,8 @@ def load(filename: str):
                 curves, slides, length, edge_sounds, edge_sets_str, *hit_sample = object_params
                 curve_type, *curve_points_str = curves.split("|")
 
+                curve_type = CurveType(curve_type)
+
                 curve_points = []
                 for curve_point in curve_points_str:
                     point_x, point_y = curve_point.split(":")
@@ -741,11 +741,29 @@ def load(filename: str):
                 else:
                     hit_sample = HitSample()
 
+                if curve_type == CurveType.BEZIER:
+                    curves = []
+                    curr_curve = [(x, y)]
+
+                    prev_point = (-1, -1)  # sentinel
+                    for point in curve_points:
+                        if point[0] == prev_point[0] and point[1] == prev_point[1]:
+                            curves.append(Curve(CurveType.BEZIER, curr_curve))
+                            curr_curve = [point]
+                        else:
+                            curr_curve.append(point)
+
+                        prev_point = point
+
+                    curves.append(Curve(CurveType.BEZIER, curr_curve))
+                else:
+                    curves = [
+                        Curve(curve_type, [(x, y), *curve_points])
+                    ]
+
                 beatmap.hit_objects.append(Slider(
                     x, y, start_time, object_type, create_hit_sound(hit_sound), new_combo, combo_to_skip,
-                    hit_sample, [
-                        Curve(curve_type, curve_points)
-                    ], slides, length, edge_sounds, edge_sets))
+                    hit_sample, curves, slides, length, edge_sounds, edge_sets))
             elif object_type == HitObjectType.SPINNER:
                 end_time, *hit_sample = object_params
 
@@ -761,7 +779,7 @@ def load(filename: str):
                     end_time))
             elif object_type_flag == HitObjectType.HOLD_NOTE.value:
                 pass
-    
+
     populate_timing_point_properties(beatmap)
     populate_slider_properties(beatmap)
 
