@@ -784,3 +784,8 @@ def load(filename: str):
     populate_slider_properties(beatmap)
 
     return beatmap
+
+
+if __name__ == "__main__":
+    beatmap = load("sample_beatmap/diff1.osu")
+    
