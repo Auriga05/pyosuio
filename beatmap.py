@@ -42,178 +42,178 @@ class OverlayPosition(Enum):
 
 @dataclass
 class General:
-    AudioFilename: str = ""
+    audio_filename: str = ""
     """Location of the audio file relative to the current folder"""
 
-    AudioLeadIn: int = 0
+    audio_lead_in: int = 0
     """Milliseconds of silence before the audio starts playing"""
 
-    AudioHash: str = ""
+    audio_hash: str = ""
     """Deprecated"""
 
-    PreviewTime: int = -1
+    preview_time: int = -1
     """Time in milliseconds when the audio preview should start"""
 
-    Countdown: Countdown = Countdown.NORMAL
+    countdown: Countdown = Countdown.NORMAL
     """Speed of the countdown before the first hit object"""
 
-    SampleSet: SampleSet = SampleSet.NORMAL
+    sample_set: SampleSet = SampleSet.NORMAL
     """Sample set that will be used if timing points do not override it (Normal, Soft, Drum)"""
 
-    StackLeniency: Decimal = Decimal("0.7")
+    stack_leniency: Decimal = Decimal("0.7")
     """Multiplier for the threshold in time where hit objects placed close together stack (0–1)"""
 
-    Mode: GameMode = GameMode.STANDARD
+    mode: GameMode = GameMode.STANDARD
     """Game mode"""
 
-    LetterboxInBreaks: bool = False
+    letterbox_in_breaks: bool = False
     """Whether or not breaks have a letterboxing effect"""
 
-    StoryFireInFront: bool = True
+    story_fire_in_front: bool = True
     """Deprecated"""
 
-    UseSkinSprites: bool = False
+    use_skin_sprites: bool = False
     """Whether or not the storyboard can use the user's skin images"""
 
-    AlwaysShowPlayfield: bool = False
+    always_show_playfield: bool = False
     """Deprecated"""
 
-    OverlayPosition: str = OverlayPosition.NO_CHANGE
+    overlay_position: str = OverlayPosition.NO_CHANGE
     """Draw order of hit circle overlays compared to hit numbers"""
 
-    SkinPreference: str = ""
+    skin_preference: str = ""
     """Preferred skin to use during gameplay"""
 
-    EpilepsyWarning: bool = False
+    epilepsy_warning: bool = False
     """Whether or not a warning about flashing colours should be shown at the beginning of the map"""
 
-    CountdownOffset: int = 0
+    countdown_offset: int = 0
     """Time in beats that the countdown starts before the first hit object"""
 
-    SpecialStyle: bool = False
+    special_style: bool = False
     """Whether or not the "N+1" style key layout is used for osu!mania"""
 
-    WidescreenStoryboard: bool = False
+    widescreen_storyboard: bool = False
     """Whether or not the storyboard allows widescreen viewing"""
 
-    SamplesMatchPlaybackRate: bool = False
+    samples_match_playback_rate: bool = False
     """Whether or not sound samples will change rate when playing with speed-changing mods"""
 
 
 @dataclass
 class Editor:
-    DistanceSpacing: Decimal = Decimal(1)
+    distance_spacing: Decimal = Decimal(1)
     """Distance snap multiplier"""
 
-    BeatDivisor: int = 4
+    beat_divisor: int = 4
     """Beat snap divisor"""
 
-    GridSize: int = 64
+    grid_size: int = 64
     """Grid size"""
 
-    TimelineZoom: Decimal = Decimal()
+    timeline_zoom: Decimal = Decimal()
     """Scale factor for the object timeline"""
 
-    Bookmarks: list[int] = default_field([])
+    bookmarks: list[int] = default_field([])
     """Time in milliseconds of bookmarks"""
 
 
 @dataclass
 class Metadata:
-    Title: str = ""
+    title: str = ""
     """Romanised song title"""
 
-    TitleUnicode: str = ""
+    title_unicode: str = ""
     """Song title"""
 
-    Artist: str = ""
+    artist: str = ""
     """Romanised song artist"""
 
-    ArtistUnicode: str = ""
+    artist_unicode: str = ""
     """Song artist"""
 
-    Creator: str = ""
+    creator: str = ""
     """Beatmap creator"""
 
-    Version: str = ""
+    version: str = ""
     """Difficulty name"""
 
-    Source: str = ""
+    source: str = ""
     """Original media the song was produced for"""
 
-    Tags: list[str] = default_field([])
+    tags: list[str] = default_field([])
     """separated list of strings"""
 
-    BeatmapID: int = -1
+    beatmap_id: int = -1
     """Difficulty ID"""
 
-    BeatmapSetID: int = -1
+    beatmap_set_id: int = -1
     """Beatmap ID"""
 
 
 @dataclass
 class Difficulty:
-    HPDrainRate: Decimal = Decimal(5)
+    hp_drain_rate: Decimal = Decimal(5)
     """HP setting (0–10)"""
 
-    CircleSize: Decimal = Decimal(5)
+    circle_size: Decimal = Decimal(5)
     """CS setting (0–10)"""
 
-    OverallDifficulty: Decimal = Decimal(5)
+    overall_difficulty: Decimal = Decimal(5)
     """OD setting (0–10)"""
 
-    ApproachRate: Decimal = Decimal(5)
+    approach_rate: Decimal = Decimal(5)
     """AR setting (0–10)"""
 
-    SliderMultiplier: Decimal = Decimal(5)
+    slider_multiplier: Decimal = Decimal(5)
     """Base slider velocity in hundreds of osu! pixels per beat"""
 
-    SliderTickRate: Decimal = Decimal(5)
+    slider_tick_rate: Decimal = Decimal(5)
     """Amount of slider ticks per beat"""
 
 
 @dataclass
 class Event:
-    eventType: int | str
+    event_type: int | str
     """Type of the event. Some events may be referred to by either a name or a number."""
 
-    startTime: int
+    start_time: int
     """Start time of the event, in milliseconds from the beginning of the beatmap's audio.
     For events that do not use a start time, the default is 0."""
 
 
 @dataclass
 class Background(Event):
-    eventType = 0  # Background
+    event_type = 0  # Background
     filename: str
     """Location of the background image relative to the beatmap directory.
     Double quotes are usually included surrounding the filename, but they are not required."""
 
-    xOffset: int
+    x_offset: int
     """Offset in osu! pixels from the centre of the screen."""
 
-    yOffset: int
+    y_offset: int
     """Offset in osu! pixels from the centre of the screen."""
 
 
 @dataclass
 class Video(Event):
-    eventType = 1  # Video
+    event_type = 1  # Video
     filename: str
     """Location of the background video relative to the beatmap directory.
     Double quotes are usually included surrounding the filename, but they are not required."""
 
-    xOffset: int
+    x_offset: int
     """Offset in osu! pixels from the centre of the screen."""
 
-    yOffset: int
+    y_offset: int
     """Offset in osu! pixels from the centre of the screen."""
 
 
 @dataclass
 class Break(Event):
-    eventType = 2  # Break
-    startTime: int
+    event_type = 2  # Break
+    start_time: int
     """End time of the break, in milliseconds from the beginning of the beatmap's audio."""
 
 
@@ -238,10 +238,10 @@ def create_effects(x):
 
 @dataclass
 class Effects:
-    KiaiTime: bool
+    kiai_time: bool
     """Whether or not kiai time is enabled"""
 
-    BarLine: bool
+    bar_line: bool
     """Whether or not the first barline is omitted in osu!taiko and osu!mania"""
 
 
@@ -254,10 +254,10 @@ class TimingPoint:
     meter: int
     """Amount of beats in a measure. Inherited timing points ignore this property."""
 
-    sampleSet: int
+    sample_set: int
     """Default sample set for hit objects."""
 
-    sampleIndex: int
+    sample_index: int
     """Custom sample index for hit objects. 0 indicates osu!'s default hitsounds."""
 
     volume: int
@@ -269,10 +269,10 @@ class TimingPoint:
     effects: Effects
     """Bit flags that give the timing point extra effects. See the effects section."""
 
-    beatDuration: Decimal = Decimal()
+    beat_duration: Decimal = Decimal()
     """The duration of a beat, in milliseconds."""
 
-    svMultiplier: Decimal = Decimal(1)
+    sv_multiplier: Decimal = Decimal(1)
     """A negative inverse slider velocity multiplier, as a percentage.
     For example, -50 would make all sliders in this timing section twice as fast as SliderMultiplier."""
 
@@ -282,10 +282,10 @@ class Colors:
     colors: list[tuple[int, ...]] = default_field([])
     """Combo Colors"""
 
-    SliderTrackOverride: tuple[int, int, int] | None = None
+    slider_track_override: tuple[int, int, int] | None = None
     """Additive slider track colour"""
 
-    SliderBorder: tuple[int, int, int] | None = None
+    slider_border: tuple[int, int, int] | None = None
     """Slider border colour"""
 
 
@@ -333,10 +333,10 @@ def create_hit_sample(x: str):
 
 @dataclass
 class HitSample:
-    normalSet: TimingPointSampleSet = default_field(TimingPointSampleSet.DEFAULT)
+    normal_set: TimingPointSampleSet = default_field(TimingPointSampleSet.DEFAULT)
     """Sample set of the normal sound."""
 
-    additionSet: TimingPointSampleSet = default_field(TimingPointSampleSet.DEFAULT)
+    addition_set: TimingPointSampleSet = default_field(TimingPointSampleSet.DEFAULT)
     """Sample set of the whistle, finish, and clap sounds."""
 
     index: int = 0
@@ -363,17 +363,17 @@ class HitObject:
     type: HitObjectType
     """type of the object"""
 
-    hitSound: HitSound
+    hit_sound: HitSound
     """Hitsound additions applied to the object"""
 
-    newCombo: bool
+    new_combo: bool
     """Whether or not the object is the start of a new combo"""
 
-    comboToSkip: int
+    combo_to_skip: int
     """How many combo colours to skip, a practice referred to as "colour hax".
     Only relevant if the object starts a new combo."""
 
-    hitSample: HitSample
+    hit_sample: HitSample
     """Information about which samples are played when the object is hit."""
 
 
@@ -398,10 +398,10 @@ class CurveType(Enum):
 
 @dataclass
 class Curve:
-    curveType: CurveType
+    curve_type: CurveType
     """Type of curve"""
 
-    curvePoints: list[tuple[int, int]]
+    curve_points: list[tuple[int, int]]
     """Anchor points used to construct the curve"""
 
 
@@ -417,15 +417,15 @@ class Slider(HitObject):
     length: Decimal
     """Visual length in osu! pixels of the slider."""
 
-    edgeSounds: list[int]
+    edge_sounds: list[int]
     """Hitsounds that play when hitting edges of the slider's curve. The first sound is the one that plays when the 
     slider is first clicked, and the last sound is the one that plays when the slider's end is hit."""
 
-    edgeSets: list[tuple[TimingPointSampleSet, TimingPointSampleSet]]
+    edge_sets: list[tuple[TimingPointSampleSet, TimingPointSampleSet]]
     """Sample sets used for the edgeSounds. Each set is in the format normalSet:additionSet, with the same meaning as 
     in the hitsounds section."""
 
-    endTime: int = 0  # to be populated after
+    end_time: int = 0  # to be populated after
 
     duration: Decimal = 0  # to be populated after
 
@@ -434,7 +434,7 @@ class Slider(HitObject):
 
 @dataclass
 class Spinner(HitObject):
-    endTime: int
+    end_time: int
 
 
 @dataclass
@@ -454,7 +454,7 @@ class Beatmap:
     events: Events = default_field(Events())
     """Beatmap and storyboard graphic events"""
 
-    timingPoints: list[TimingPoint] = default_field([])
+    timing_points: list[TimingPoint] = default_field([])
     """Timing and control points"""
 
     colors: Colors = default_field(Colors())
@@ -477,18 +477,18 @@ class Section(Enum):
 
 def populate_timing_point_properties(beatmap: Beatmap):
     """Sets beat length of inherited timing points"""
-    timing_points = iter(sorted(beatmap.timingPoints, key=lambda x: x.time))
+    timing_points = iter(sorted(beatmap.timing_points, key=lambda x: x.time))
     last_beat_duration = 0
 
     for timing_point in timing_points:
         if timing_point.uninherited:
-            last_beat_duration = timing_point.beatDuration
+            last_beat_duration = timing_point.beat_duration
         else:
-            timing_point.beatDuration = last_beat_duration
+            timing_point.beat_duration = last_beat_duration
 
 
 def populate_slider_properties(beatmap: Beatmap):
-    timing_points = sorted(beatmap.timingPoints, key=lambda x: x.time)
+    timing_points = sorted(beatmap.timing_points, key=lambda x: x.time)
     i = 0
 
     timing_point = timing_points[i]
@@ -508,10 +508,10 @@ def populate_slider_properties(beatmap: Beatmap):
                 else:
                     next_time = math.inf
 
-            duration = timing_point.beatDuration * hit_object.slides * hit_object.length / \
-                       (timing_point.svMultiplier * 100 * beatmap.difficulty.SliderMultiplier)
+            duration = timing_point.beat_duration * hit_object.slides * hit_object.length / \
+                       (timing_point.sv_multiplier * 100 * beatmap.difficulty.slider_multiplier)
 
-            hit_object.endTime = hit_object.time + duration
+            hit_object.end_time = hit_object.time + duration
             hit_object.duration = duration
             hit_object.timing_point = timing_point
 
@@ -556,56 +556,56 @@ def load(filename: str):
             value = value.strip()
 
             if key == "AudioFilename":
-                beatmap.general.AudioFilename = value
+                beatmap.general.audio_filename = value
             elif key == "AudioLeadIn":
-                beatmap.general.AudioLeadIn = int(value)
+                beatmap.general.audio_lead_in = int(value)
             elif key == "AudioHash":
-                beatmap.general.AudioHash = value
+                beatmap.general.audio_hash = value
             elif key == "PreviewTime":
-                beatmap.general.PreviewTime = int(value)
+                beatmap.general.preview_time = int(value)
             elif key == "Countdown":
-                beatmap.general.Countdown = int(value)
+                beatmap.general.countdown = int(value)
             elif key == "SampleSet":
-                beatmap.general.SampleSet = value
+                beatmap.general.sample_set = value
             elif key == "StackLeniency":
-                beatmap.general.StackLeniency = Decimal(value)
+                beatmap.general.stack_leniency = Decimal(value)
             elif key == "Mode":
-                beatmap.general.Mode = int(value)
+                beatmap.general.mode = int(value)
             elif key == "LetterboxInBreaks":
-                beatmap.general.LetterboxInBreaks = bool(int(value))
+                beatmap.general.letterbox_in_breaks = bool(int(value))
             elif key == "StoryFireInFront":
-                beatmap.general.StoryFireInFront = bool(int(value))
+                beatmap.general.story_fire_in_front = bool(int(value))
             elif key == "UseSkinSprites":
-                beatmap.general.UseSkinSprites = bool(int(value))
+                beatmap.general.use_skin_sprites = bool(int(value))
             elif key == "AlwaysShowPlayfield":
-                beatmap.general.AlwaysShowPlayfield = bool(int(value))
+                beatmap.general.always_show_playfield = bool(int(value))
             elif key == "OverlayPosition":
-                beatmap.general.OverlayPosition = str(value)
+                beatmap.general.overlay_position = str(value)
             elif key == "SkinPreference":
-                beatmap.general.SkinPreference = str(value)
+                beatmap.general.skin_preference = str(value)
             elif key == "EpilepsyWarning":
-                beatmap.general.EpilepsyWarning = bool(int(value))
+                beatmap.general.epilepsy_warning = bool(int(value))
             elif key == "CountdownOffset":
-                beatmap.general.CountdownOffset = int(value)
+                beatmap.general.countdown_offset = int(value)
             elif key == "SpecialStyle":
-                beatmap.general.SpecialStyle = bool(int(value))
+                beatmap.general.special_style = bool(int(value))
             elif key == "WidescreenStoryboard":
-                beatmap.general.WidescreenStoryboard = bool(int(value))
+                beatmap.general.widescreen_storyboard = bool(int(value))
             elif key == "SamplesMatchPlaybackRate":
-                beatmap.general.SamplesMatchPlaybackRate = bool(int(value))
+                beatmap.general.samples_match_playback_rate = bool(int(value))
         elif section == Section.EDITOR:
             key, value = line.split(":")
 
             if key == "DistanceSpacing":
-                beatmap.editor.DistanceSpacing = Decimal(value)
+                beatmap.editor.distance_spacing = Decimal(value)
             if key == "BeatDivisor":
-                beatmap.editor.BeatDivisor = int(value)
+                beatmap.editor.beat_divisor = int(value)
             if key == "GridSize":
-                beatmap.editor.GridSize = int(value)
+                beatmap.editor.grid_size = int(value)
             if key == "TimelineZoom":
-                beatmap.editor.TimelineZoom = Decimal(value)
+                beatmap.editor.timeline_zoom = Decimal(value)
             if key == "Bookmarks":
-                beatmap.editor.Bookmarks = [int(x) for x in value.split(",")]
+                beatmap.editor.bookmarks = [int(x) for x in value.split(",")]
         elif section == Section.METADATA:
             key, value = line.split(":", maxsplit=1)  # metadata might have more than one colon
 
@@ -613,40 +613,40 @@ def load(filename: str):
             value = value.strip()
 
             if key == "Title":
-                beatmap.metadata.Title = value
+                beatmap.metadata.title = value
             if key == "TitleUnicode":
-                beatmap.metadata.TitleUnicode = value
+                beatmap.metadata.title_unicode = value
             if key == "Artist":
-                beatmap.metadata.Artist = value
+                beatmap.metadata.artist = value
             if key == "ArtistUnicode":
-                beatmap.metadata.ArtistUnicode = value
+                beatmap.metadata.artist_unicode = value
             if key == "Creator":
-                beatmap.metadata.Creator = value
+                beatmap.metadata.creator = value
             if key == "Version":
-                beatmap.metadata.Version = value
+                beatmap.metadata.version = value
             if key == "Source":
-                beatmap.metadata.Source = value
+                beatmap.metadata.source = value
             if key == "Tags":
-                beatmap.metadata.Tags = value.split(" ")
+                beatmap.metadata.tags = value.split(" ")
             if key == "BeatmapID":
-                beatmap.metadata.BeatmapID = int(value)
+                beatmap.metadata.beatmap_id = int(value)
             if key == "BeatmapSetID":
-                beatmap.metadata.BeatmapSetID = int(value)
+                beatmap.metadata.beatmap_set_id = int(value)
         elif section == Section.DIFFICULTY:
             key, value = line.split(":")
 
             if key == "HPDrainRate":
-                beatmap.difficulty.HPDrainRate = Decimal(value)
+                beatmap.difficulty.hp_drain_rate = Decimal(value)
             if key == "CircleSize":
-                beatmap.difficulty.CircleSize = Decimal(value)
+                beatmap.difficulty.circle_size = Decimal(value)
             if key == "OverallDifficulty":
-                beatmap.difficulty.OverallDifficulty = Decimal(value)
+                beatmap.difficulty.overall_difficulty = Decimal(value)
             if key == "ApproachRate":
-                beatmap.difficulty.ApproachRate = Decimal(value)
+                beatmap.difficulty.approach_rate = Decimal(value)
             if key == "SliderMultiplier":
-                beatmap.difficulty.SliderMultiplier = Decimal(value)
+                beatmap.difficulty.slider_multiplier = Decimal(value)
             if key == "SliderTickRate":
-                beatmap.difficulty.SliderTickRate = Decimal(value)
+                beatmap.difficulty.slider_tick_rate = Decimal(value)
         elif section == Section.EVENTS:
             pass
         elif section == Section.TIMING_POINTS:
@@ -668,7 +668,7 @@ def load(filename: str):
                 timing_point = TimingPoint(
                     time, meter, sample_set, sample_index, volume, uninherited, effects, Decimal(), -100 / beat_length)
 
-            beatmap.timingPoints.append(timing_point)
+            beatmap.timing_points.append(timing_point)
         elif section == Section.COLORS:
             key, value = line.split(":")
 
@@ -682,9 +682,9 @@ def load(filename: str):
                 _color_index = int(key[5:])
                 beatmap.colors.colors.append(color)
             elif key == "SliderTrackOverride":
-                beatmap.colors.SliderTrackOverride = color
+                beatmap.colors.slider_track_override = color
             elif key == "SliderBorder":
-                beatmap.colors.SliderBorder = color
+                beatmap.colors.slider_border = color
         elif section == Section.HIT_OBJECTS:
             # object_params may include hit_sample
             x, y, start_time, object_type_flag, hit_sound, * \
